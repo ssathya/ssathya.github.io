@@ -1,0 +1,115 @@
+﻿<html>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<head>
+    <title>the title</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+        var generatedQuote;
+        var mentionedBy;
+        function getExternalQuote(){
+            $.getJSON("https://crossorigin.me/http://api.forismatic.com/api/1.0/",
+            {
+                _: new Date().getTime(), //to prevent caching http://stackoverflow.com/a/31948654/1952996
+                method: "getQuote",
+                format: "json",
+                lang: "en"
+            }, function(jd) {
+                generatedQuote = jd.quoteText;
+                mentionedBy = jd.quoteAuthor;
+                $("#quotetext").text(generatedQuote);
+                $("#quoteAuthor").text(mentionedBy);
+                $("#twitterIcon").show();
+                $('#twitterIcon').attr(
+                    'href', 'https://twitter.com/intent/tweet?related=freecodecamp&text=&hashtags=QuoteOfTheDay' +
+                    encodeURIComponent('"' + generatedQuote + '" ' +
+                    mentionedBy));
+            });
+
+        }
+        $(document).ready(function() {
+         $("#twitterIcon").hide();
+        getExternalQuote();
+        $("button").click(function(){
+            getExternalQuote();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <div class="container">
+            <nav class=" navbar-inverse navbar-fixed-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="#">Quote for the moment</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <br />
+        </div>
+        <div class="page-header text-center">
+            <h1>
+                Quote's that history remembers
+                <br />
+                <small>
+                    Refresh page or click Refresh button
+                </small>
+            </h1>
+        </div>
+        <div class="container">
+            <div class="span2 well bg-info text-danger text-center">
+                <br />
+                <br />
+                <h4>
+                    <span id="quotetext">
+                        <i class="fa fa-refresh fa-spin"></i>
+                        It takes a while to pick a good quote for you! If this message will not disappear in 10 seconds then try to do a page refresh!
+                    </span>
+                </h4>
+                <p class="text-right">
+                    <em>
+                        <span id="quoteAuthor" class="bg-primary">
+                            Sridhar Sathya
+                        </span>
+                    </em>
+                </p>
+                <br />
+            </div>
+            <div class="buttons">
+                <button>Refresh</button>
+                <a class="button fa-stack fa-lg" id="twitterIcon" title="Tweet this" target="_blank">
+                    <i class="fa fa-circle-thin fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x"></i>
+                </a>
+                <!--
+                <span class="fa-stack fa-lg" id="twitterIcon">
+                        <i class="fa fa-circle-thin fa-stack-2x"></i>
+                        <i class="fa fa-twitter fa-stack-1x"></i>
+                    </span>
+                    -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

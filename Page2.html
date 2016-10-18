@@ -16,8 +16,9 @@
     <script>
         var generatedQuote;
         var mentionedBy;
-        function getExternalQuote(){
-            $.getJSON("https://crossorigin.me/http://api.forismatic.com/api/1.0/",
+        function getExternalQuote() {
+            //https://crossorigin.me/
+            $.getJSON("http://api.forismatic.com/api/1.0/",
             {
                 _: new Date().getTime(), //to prevent caching http://stackoverflow.com/a/31948654/1952996
                 method: "getQuote",

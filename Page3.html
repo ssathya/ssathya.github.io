@@ -35,9 +35,8 @@
 
         function readDataFromOpenWeather(lat, long) {
             const units = "imperial";
-            //https://crossorigin.me/
             $.ajax({
-                url: "http://api.openweathermap.org/data/2.5/weather",
+                url: "https://crossorigin.me/http://api.openweathermap.org/data/2.5/weather",
                 method: "GET",
                 data: {
                     units: units,

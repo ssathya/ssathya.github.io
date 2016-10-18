@@ -17,14 +17,14 @@
         var generatedQuote;
         var mentionedBy;
         function getExternalQuote() {
-            //https://crossorigin.me/
-            $.getJSON("http://api.forismatic.com/api/1.0/",
+            //
+            $.getJSON("https://crossorigin.me/http://api.forismatic.com/api/1.0/",
             {
                 _: new Date().getTime(), //to prevent caching http://stackoverflow.com/a/31948654/1952996
                 method: "getQuote",
                 format: "json",
                 lang: "en"
-            }, function(jd) {
+            }, function (jd) {
                 generatedQuote = jd.quoteText;
                 mentionedBy = jd.quoteAuthor;
                 $("#quotetext").text(generatedQuote);
@@ -37,11 +37,11 @@
             });
 
         }
-        $(document).ready(function() {
-         $("#twitterIcon").hide();
-        getExternalQuote();
-        $("button").click(function(){
+        $(document).ready(function () {
+            $("#twitterIcon").hide();
             getExternalQuote();
+            $("button").click(function () {
+                getExternalQuote();
             });
         });
     </script>

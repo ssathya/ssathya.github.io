@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Wikipages</title>
+    <!-- Bootstrap Core CSS
+    <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/jspath.min.js"></script>
+    <!-- ReSharper disable once VariableCanBeMadeConst -->
+    <script>
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        Wikipedia Wrapper
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="randomArticle">Random Article</a>
+                </li>
+                <li>
+                    <a href="#">Shortcuts</a>
+                </li>
+
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2 id="heading">
+                            Help
+                        </h2>
+                        <span id="newText" class="text-justify">
+                            Click on “Random Article” to get a random article from Wikipedia. Text for a random article  is extracted from Wikipedia and presented in this panel removing images, links, etc. and preserve only the text and formatting.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Menu Toggle Script -->
+    <!-- ReSharper disable once VariableCanBeMadeConst -->
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+
+        function fetchRandomArticle(title) {
+
+            $.ajax({
+                //url: "https://crossorigin.me/http://en.wikipedia.org/w/api.php",
+                url: "http://en.wikipedia.org/w/api.php",
+                method: "GET",
+                data: {
+                    'action': 'query',
+                    'prop': 'extracts',
+                    'format': 'json',
+                    'generator': 'random'
+                }
+            }).done(function (msg) {
+                $("#heading").text(JSPath.apply('.query...title', msg));
+                $("#newText").html(JSPath.apply('.query...extract', msg));
+            }).fail(function (error) {
+                alert("Could not get data from Wikipedia");
+            });
+            return;
+        }
+
+        $(function () {
+            $("#randomArticle").click(function (e) {
+                e.preventDefault();
+                fetchRandomArticle();
+            });
+        });
+        $(document).ready(function () {
+            console.log("Starting my scripts");
+            fetchRandomArticle();
+        });
+    </script>
+</body>
+</html>

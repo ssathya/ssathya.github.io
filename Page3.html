@@ -36,15 +36,16 @@
         function readDataFromOpenWeather(lat, long) {
             const units = "imperial";
             $.ajax({
-                url: "https://crossorigin.me/http://api.openweathermap.org/data/2.5/weather",
+                url: "http://api.openweathermap.org/data/2.5/weather/?callback=?",
                 method: "GET",
+                dataType: "jsonp",
                 data: {
                     units: units,
                     lat: lat,
                     lon: long,
                     APPID: "bf6d96a5dc34df0bfde9d4c396aec7f9"
                 }
-            }).done(function(msg) {
+            }).done(function (msg) {
                 console.log(msg);
                 $("#city").text(msg.name);
                 $("#skyconditions").text(msg.weather[0].description);
@@ -57,7 +58,7 @@
                 const tempIcon = `<img src="http://openweathermap.org/img/w/${msg.weather[0].icon}.png" alt="${msg.weather[0].main}">`;
                 $("#currentIcon").html(tempIcon);
 
-            }).fail(function(error) {
+            }).fail(function (error) {
                 alert("Could not get weather data");
             });
             return;
@@ -85,96 +86,96 @@
             }
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             getWeather();
         });
     </script>
 </head>
 <body>
-<div class="jubotron text-center">
-    <h1>Your local weather</h1>
-    <p>
-        Your local weather obtained from a weather staticon close to you.
-    </p>
-    <p class="small">
-        Please allow to share your location information to gather your local weather
-    </p>
-    <br /><br />
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-2">
-            <h3>
-                <span id="currentTemp">
+    <div class="jubotron text-center">
+        <h1>Your local weather</h1>
+        <p>
+            Your local weather obtained from a weather staticon close to you.
+        </p>
+        <p class="small">
+            Please allow to share your location information to gather your local weather
+        </p>
+        <br /><br />
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                <h3>
+                    <span id="currentTemp">
                         75F
                     </span>
-            </h3>
-        </div>
-        <div class="col-sm-2">
-            <span id="currentIcon">
+                </h3>
+            </div>
+            <div class="col-sm-2">
+                <span id="currentIcon">
                     <img src="http://openweathermap.org/img/w/01d.png" alt="Sunny View">
                 </span>
+            </div>
+            <div class="col-sm-8">
+            </div>
         </div>
-        <div class="col-sm-8">
-        </div>
-    </div>
 
-    <table class="table table-bordered table-hover">
-        <tr>
-            <td class="field-lable col-xs-3 active">
-                City
-            </td>
-            <td class="col-md-9" id="city">
-                <del>Your City</del>
-            </td>
-        </tr>
-        <tr>
-            <td class="field-lable col-xs-3 active">
-                Geo coords:
-            </td>
-            <td class="col-md-9" id="geoLocation">
-                [ 51.51, -0.13 ]
-            </td>
-        </tr>
-        <tr>
-            <td class="field-lable col-xs-3 active">
-                Sky conditions
-            </td>
-            <td class="col-md-9" id="skyconditions">
-                Broken clouds
-            </td>
-        </tr>
-        <tr>
-            <td class="field-lable col-xs-3 active">
-                Humidity
-            </td>
-            <td class="col-md-9" id="humidity">
-                60%
-            </td>
-        </tr>
-        <tr>
-            <td class="field-lable col-xs-3 active">
-                Sunrise
-            </td>
-            <td class="col-md-9" id="sunrise">
-                6:30 A.M.
-            </td>
-        </tr>
-        <tr>
-            <td class="field-lable col-xs-3 active">
-                Sunset
-            </td>
-            <td class="col-md-9" id="sunset">
-                6:30 P.M.
-            </td>
-        </tr>
-    </table>
-    <br />
-    <form action="" onclick="return DisplayTemp();">
-        <input type="radio" name="units" id="Fahrenheit" value="Fahrenheit" checked /> Fahrenheit
-        <input type="radio" name="units" id="Celsius" value="Celsius" /> Celsius
-    </form>
-</div>
+        <table class="table table-bordered table-hover">
+            <tr>
+                <td class="field-lable col-xs-3 active">
+                    City
+                </td>
+                <td class="col-md-9" id="city">
+                    <del>Your City</del>
+                </td>
+            </tr>
+            <tr>
+                <td class="field-lable col-xs-3 active">
+                    Geo coords:
+                </td>
+                <td class="col-md-9" id="geoLocation">
+                    [ 51.51, -0.13 ]
+                </td>
+            </tr>
+            <tr>
+                <td class="field-lable col-xs-3 active">
+                    Sky conditions
+                </td>
+                <td class="col-md-9" id="skyconditions">
+                    Broken clouds
+                </td>
+            </tr>
+            <tr>
+                <td class="field-lable col-xs-3 active">
+                    Humidity
+                </td>
+                <td class="col-md-9" id="humidity">
+                    60%
+                </td>
+            </tr>
+            <tr>
+                <td class="field-lable col-xs-3 active">
+                    Sunrise
+                </td>
+                <td class="col-md-9" id="sunrise">
+                    6:30 A.M.
+                </td>
+            </tr>
+            <tr>
+                <td class="field-lable col-xs-3 active">
+                    Sunset
+                </td>
+                <td class="col-md-9" id="sunset">
+                    6:30 P.M.
+                </td>
+            </tr>
+        </table>
+        <br />
+        <form action="" onclick="return DisplayTemp();">
+            <input type="radio" name="units" id="Fahrenheit" value="Fahrenheit" checked /> Fahrenheit
+            <input type="radio" name="units" id="Celsius" value="Celsius" /> Celsius
+        </form>
+    </div>
 </body>
 </html>

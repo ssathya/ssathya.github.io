@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
     <!-- Custom CSS -->
     <link href="css/simple-sidebar.css" rel="stylesheet">
-
+    <style>
+        .panel:hover > .panel-heading {
+            background-color: #428bca;
+        }
+    </style>
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
@@ -42,10 +46,14 @@
                     <a href="#" id="randomArticle">Random Article</a>
                 </li>
                 <li>
-                    <a href="#">Shortcuts</a>
+                    <a href="#" id="externalRead">Read @Wikipedia</a>
                 </li>
 
                 <li>
+                    <form action="" autocomplete="on">
+                        <input type="text" id="searchString" name="sString" placeholder="Search String" />
+                        <i class="fa fa-search" style="color: white; font-size: 24px;" onclick="return searchWikipedia();"></i>
+                    </form>
                     <a href="#">Contact</a>
                 </li>
             </ul>
@@ -75,18 +83,77 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- Menu Toggle Script -->
     <!-- ReSharper disable once VariableCanBeMadeConst -->
+    <!-- ReSharper disable once UseOfImplicitGlobalInFunctionScope -->
     <script>
+        //window.appUrL = "https://crossorigin.me/http://en.wikipedia.org/w/api.php";
+        window.appUrL = "http://en.wikipedia.org/w/api.php/?callback=?";
+
+        function searchWikipedia() {
+            const val = document.getElementById('searchString').value;
+            getWikiSearchResult(val);
+
+        }
+
         $("#menu-toggle").click(function (e) {
             e.preventDefault();
             $("#wrapper").toggleClass("toggled");
-        }); 
+        });
+
+        function getWikiSearchResult(val) {
+            $.ajax({
+                url: window.appUrL,
+                method: "GET",
+                dataType: "jsonp",
+                data: {
+                    action: 'query',
+                    format: 'json',
+                    list: 'search',
+                    utf8: '1',
+                    srsearch: val,
+                    srlimit: '10',
+                    srprop: 'snippet'
+                }
+
+            }).done(function (wikiData) {
+                console.log(wikiData);
+                const searchResults = JSPath.apply('.query.search', wikiData);
+                const arraySize = searchResults.length;
+                $("#heading").text("Search result(s)");
+                var displaySearchResult = '';
+                for (let i = 0; i < arraySize; i++) {
+                    let strbuilder = '<div class="panel panel-default" id="panelId';
+                    strbuilder += i + 1 + '">\n';
+
+                    strbuilder += `<div class="panel-heading">${searchResults[i]['title']}</div>
+`;
+                    strbuilder += `<div class="panel-body">${searchResults[i]['snippet']}</div>
+`;
+
+                    strbuilder += '</div>\n';
+                    displaySearchResult += strbuilder;
+                    //console.log(searchResults[i]['title']);
+                }
+                $("#newText").html(displaySearchResult);
+            }).error(function (wikiError) {
+                console.log(wikiError);
+            });
+        }
 
         function fetchRandomArticle(title) {
+            //setup
+            $("#randomArticle").html('<span id="quotetext"> <i class="fa fa-refresh fa-spin">Random Article</i></span>');
+            $("#externalRead").attr(
+                'href', '#');
+            $("#externalRead").attr(
+                'target', "");
 
+            //start external call
             $.ajax({
-                url: "https://crossorigin.me/http://en.wikipedia.org/w/api.php",
-                //url: "http://en.wikipedia.org/w/api.php",
+                url: window.appUrL,
+                //url: createCORSRequest("GET", "http://en.wikipedia.org/w/api.php/"),
                 method: "GET",
+                dataType: "jsonp",
+                cache: false,
                 data: {
                     'action': 'query',
                     'prop': 'extracts',
@@ -96,8 +163,15 @@
             }).done(function (msg) {
                 $("#heading").text(JSPath.apply('.query...title', msg));
                 $("#newText").html(JSPath.apply('.query...extract', msg));
+                $("#externalRead").attr(
+                    'href', `http://enwp.org?curid=${JSPath.apply('.query...pageid', msg)}`);
+                $("#externalRead").attr(
+                    'target', "_blank");
+
             }).fail(function (error) {
                 alert("Could not get data from Wikipedia");
+            }).always(function () {
+                $("#randomArticle").html("Random Article");
             });
             return;
         }

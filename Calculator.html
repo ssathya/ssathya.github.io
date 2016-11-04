@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- ReSharper disable once CssBrowserCompatibility -->
+    <style>
+        .row {
+            margin-bottom: 15px;
+        }
+
+        #calcBody {
+            width: 360px;
+            border: 1px solid #999;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        #calc-display {
+            font-size: 24px;
+            background-color: lightgray;
+            text-align: right;
+            font-family: 'Exo 2', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!--<div class="jumbotron text-center">
+        <h1>My First Bootstrap Page</h1>
+        <p>Resize this responsive page to see the effect!</p>
+    </div>-->
+
+    <div class="container" id="calcBody">
+        <div class="text-right">
+            <input type="text" size="23" id="calc-display" value="0" />
+            <input type="hidden" id="calcMemory" value="0" />
+        </div>
+        <p></p>
+        <p></p>
+        <div class="row row-fluid calc-keys text-center">
+            <div class="col-xs-3">
+                <input type="button" value="(" onclick='valueof("(")' class="btn btn-large btn-block btn-info">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value=")" onclick='valueof(")")' class="btn btn-large btn-block btn-info">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="%" onclick='valueof("%")' class="btn btn-large btn-block btn-info">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="AC" onclick='clearDisplay("0")' class="btn btn-large btn-block btn-warning">
+            </div>
+        </div>
+        <div class="row row-fluid calc-keys text-center">
+            <div class="col-xs-3">
+                <input type="button" value="7" onclick='valueof("7")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="8" onclick='valueof("8")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="9" onclick='valueof("9")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="÷" onclick='valueof("/")' class="btn btn-large btn-block btn-info">
+            </div>
+        </div>
+        <div class="row row-fluid calc-keys text-center">
+            <div class="col-xs-3">
+                <input type="button" value="4" onclick='valueof("4")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="5" onclick='valueof("5")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="6" onclick='valueof("6")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="X" onclick='valueof("*")' class="btn btn-large btn-block btn-info">
+            </div>
+        </div>
+        <div class="row row-fluid calc-keys text-center">
+            <div class="col-xs-3">
+                <input type="button" value="1" onclick='valueof("1")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="2" onclick='valueof("2")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="3" onclick='valueof("3")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="-" onclick='valueof("-")' class="btn btn-large btn-block btn-info">
+            </div>
+        </div>
+        <div class="row row-fluid calc-keys text-center">
+            <div class="col-xs-3">
+                <input type="button" value="." onclick='valueof(".")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="0" onclick='valueof("0")' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="=" onclick='calcEvaluate()' class="btn btn-large btn-block btn-success">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="+" onclick='valueof("+")' class="btn btn-large btn-block btn-info">
+            </div>
+        </div>
+        <div class="row row-fluid calc-keys text-center">
+            <div class="col-xs-3">
+                <input type="button" value="<-" onclick='backSpace()' class="btn btn-large btn-block btn-default">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="M" onclick='saveToMemory()' class="btn btn-large btn-block btn-primary">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="MR" onclick='memoryRecall()' class="btn btn-large btn-block btn-primary">
+            </div>
+            <div class="col-xs-3">
+                <input type="button" value="±" onclick='reverseNegative()' class="btn btn-large btn-block btn-info">
+            </div>
+        </div>
+    </div>
+    <script>
+        function getInputValue(eleName) {
+            return document.getElementById(eleName).value;
+        }
+
+        function clearDisplay(value) {
+
+            document.getElementById("calc-display").value = value;
+        }
+        function calcEvaluate() {
+            try {
+                var dispValue = eval(getInputValue("calc-display"));
+                if (dispValue.toString().indexOf("Infinity") !== -1)
+                    dispValue = "Error";
+                document.getElementById("calc-display").value = dispValue.toString();
+
+            } catch (e) {
+                document.getElementById("calc-display").value = "Error";
+            }
+        }
+        function checkForError() {
+            var currentValue = getInputValue("calc-display");
+            if (currentValue.toString().indexOf("Error") === -1)
+                return false;
+            return true;
+        }
+        function backSpace() {
+            if (checkForError())
+                return;
+            var currentValue = getInputValue("calc-display");
+            if (currentValue.length === 1)
+                clearDisplay("0");
+            else
+                clearDisplay(currentValue.substr(0, currentValue.length - 1));
+        }
+        function valueof(val) {
+            if (checkForError())
+                return;
+            var currentValue = document.getElementById("calc-display").value;
+            if (currentValue === "0")
+                clearDisplay(val);
+            else {
+                currentValue = currentValue.toString() + val.toString();
+                clearDisplay(currentValue);
+            }
+        }
+        function memoryRecall() {
+            if (checkForError())
+                return;
+            var memory = document.getElementById("calcMemory").value;
+            if (memory.length === 0)
+                return;
+            clearDisplay(memory);
+        }
+        function saveToMemory() {
+            if (checkForError())
+                return;
+            document.getElementById("calcMemory").value =
+                getInputValue("calc-display");
+        }
+        function reverseNegative() {
+            var currentVal = getInputValue("calc-display");
+            if (currentVal.search(/^[1-9|(|)]/) !== -1) {
+                currentVal = "-" + currentVal;
+                clearDisplay(currentVal);
+            }
+            else if (currentVal[0] === "-") {
+                currentVal = currentVal.substr(1, currentVal.length - 1);
+                clearDisplay(currentVal);
+            }
+        }
+        $(document).ready(function () {
+
+        });
+    </script>
+</body>
+</html>

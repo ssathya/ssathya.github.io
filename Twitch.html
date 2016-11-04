@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <!-- Bootstrap Core CSS
+    <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <!-- Custom CSS -->
+    <style>
+        .panel:hover > .panel-heading {
+            background-color: #428bca;
+        }
+    </style>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/dfilatov/jspath/master/jspath.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Twitch Channels</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="#" id="home">Home</a>
+                </li>
+                <li>
+                    <a href="#" id="selectedChannels">Selected Channels</a>
+                </li>
+                <li>
+                    <a href="#" id="live">Live</a>
+                </li>
+                <li>
+                    <a href="#" id="playList">Play lists</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <br /><br /><br /><br />
+        <div id="main-content">
+        </div>
+    </div>
+    <!-- ReSharper disable StringConcatenationToTemplateString -->
+    <script>
+        var streamURL = "https://api.twitch.tv/kraken/streams/";
+        var channelURL = "https://api.twitch.tv/kraken/channels/";
+        var displayList = '';
+        function displayChannelDetails(channelName, channelStatus, count) {
+
+            $.ajax({
+                type: 'GET',
+                url: channelURL + channelName,
+                headers: {
+                    'Client-ID': 'kv4zt4vvfcnktggan2sw5zqt390gty6'
+                },
+                error: function (errorData) {
+                    console.log(errorData);
+                }
+            }).done(function (data) {
+                var returnTxt = '';
+                returnTxt = '<div class="panel panel-default">\n';
+                returnTxt += `<div class="panel-heading"><h4>` + channelName;
+                if (channelStatus.length === undefined || channelStatus.length === 0)
+                    returnTxt += ' <span class="text-warning">Channel Offline</span>';
+                returnTxt += '</h4>';
+                returnTxt += '</div>\n';
+                returnTxt += '<div class="panel-body">';
+                returnTxt += '<div class="container">';
+                returnTxt += '<div class="row">';
+                returnTxt += '<div class="col-xs-3">';
+                returnTxt += '<img class="img-thumbnail" src="' + JSPath.apply('.logo', data)[0] + '" alt="' + JSPath.apply('.display_name', data)[0] + '" width="50" height="50" >';
+                returnTxt += '</div>\n';
+                returnTxt += '<div class="col-xs-5">';
+                returnTxt += `<a href="` + JSPath.apply('.url', data) + `" target="_blank">` + JSPath.apply('.game', data) + `</a>`;
+                returnTxt += '</div>\n';
+                returnTxt += '<div class="col-xs-4 text-success">';
+                returnTxt += JSPath.apply('.followers', data) + ` Followers`;
+                returnTxt += '</div>\n';
+                returnTxt += '</div>\n';
+                returnTxt += '</div>\n';
+                returnTxt += '</div>\n';
+                returnTxt += '</div>\n';
+                displayList += returnTxt;
+                $("#main-content").html(displayList);
+            }).error(function (clientError) {
+                console.log(clientError);
+            });
+
+        }
+        function getStreamStatus(displayName, count) {  //should be display_name - Resharper hates that name!
+            $.ajax({
+                type: 'GET',
+                url: streamURL + displayName,
+                headers: {
+                    'Client-ID': 'kv4zt4vvfcnktggan2sw5zqt390gty6'
+                },
+                error: function (errorData) {
+                    console.log(errorData);
+                }
+            }).done(function (data) {
+                displayChannelDetails(displayName, JSPath.apply('.stream', data), count);
+            }).error(function (clientError) {
+                console.log(clientError);
+            });
+        }
+        function getStreamList(language, streamType, limit) {
+            var channelList = [];
+            $.ajax({
+                type: 'GET',
+                url: streamURL,
+                headers: {
+                    'Client-ID': 'kv4zt4vvfcnktggan2sw5zqt390gty6'
+                },
+                data: {
+                    language: language,
+                    stream_type: streamType,
+                    "limit": limit
+                },
+                error: function (errorData) {
+                    console.log(errorData);
+                }
+            }).done(function (streamData) {
+                channelList = JSPath.apply('.streams.channel.display_name', streamData);
+
+                for (let i = 0; i < channelList.length; i++) {
+                    getStreamStatus(channelList[i], i + 1);
+                }
+
+            }).error(function (streamError) {
+                console.log(streamError);
+                $("#main-content").html("<b>Error in data fetch</b>");
+
+            });
+
+        }
+        $(function () {
+            $("#selectedChannels").click(function (e) {
+                displayList = '<h2>Selected channels</h2>';
+                var users = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+                for (var i = 0; i < users.length; i++) {
+                    getStreamStatus(users[i], i + 1);
+                }
+            });
+        });
+        $(function () {
+            $("#live").click(function (e) {
+                displayList = '<h2>Live channels</h2>';
+                getStreamList("en", "live", 15);
+            });
+        });
+        $(function () {
+            $("#playList").click(function (e) {
+                displayList = '<h2>Play Lists</h2>';
+                getStreamList("en", "playlist", 15);
+            });
+        });
+        $(function () {
+            $("#home").click(function (e) {
+                DisplayHomeMessage();
+            });
+        });
+        function DisplayHomeMessage() {
+            var displayText = '<h2>Twitch Channels</h2>\n';
+            displayText += '<p class="text-justify">\n';
+            displayText += 'Twitch is designed to be a platform for video game-related content, including e-sports tournaments, personal streams of individual players, and gaming-related talk shows. A number of channels do live speedrunning. The Twitch homepage currently displays\n';
+            displayText += 'games based on viewership. The typical viewer is male and aged between 18 and 34 years of age, although the site has also made attempts at pursuing other demographics, including females.</p>\n';
+            displayText += '<p class="text-justify">\n';
+            displayText += 'Like other streaming platforms Twitch have live and play lists. We have handpicked some channels and you can view them by clicking <span class="text-primary"><i>Selected Channels</i></span> above. Some of the channels are now live and you\n';
+            displayText += 'can view the featured top 15 by clicking on <span class="text-primary"><i>Live</i></span>. Featured top 15 play lists can be viewed by clicking on <span class="text-primary"><i>Play lists</i></span>.</p>\n';
+            $("#main-content").html(displayText);
+        }
+        $(document).ready(function () {
+            DisplayHomeMessage();
+        });
+    </script>
+    <!-- ReSharper restore StringConcatenationToTemplateString -->
+</body>
+</html>

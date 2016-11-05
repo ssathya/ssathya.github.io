@@ -10,7 +10,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.4.1/bootstrap-slider.min.js"></script>
     <style>
-        #ex1Slider .slider-selection { background: #BABABA; }
+        #ex1Slider .slider-selection {
+            background: #BABABA;
+        }
 
         body {
             background-color: slategray;
@@ -28,156 +30,151 @@
     </style>
 </head>
 <body>
-<div class="container center-block container-fluid text-center" id="mainBody">
-    <a data-toggle="modal" data-target="#myModal">About</a>
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4>About Pomodoro</h4>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        The Pomodoro Technique is a time management method. The technique uses a timer
-                        to break down work into intervals, traditionally 25 minutes in length,
-                        separated by short breaks.The method is based on the idea that frequent breaks
-                        can improve mental agility.
-                    </p>
-                    <p>Use this tool to track your work and break time.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-
-    <div class="row row-fluid" style="margin-top: 30px;">
-        <h1 id="workTimeMsg">Work Time for: <span id="workTimeDisplay">00:00</span></h1>
-        <input id="ex1" data-slider-id="ex1Slider" type="text"
-               data-slider-min="1" data-slider-max="60"
-               data-slider-step="1" data-slider-value="25" />
-    </div>
-    <div class="row row-fluid" style="margin-top: 30px;">
-        <h1 id="breakTimeMsg">Break Time for: <span id="breakTimeDisplay">00:00</span></h1>
-        <input id="ex2" data-slider-id="ex1Slider" type="text"
-               data-slider-min="1" data-slider-max="30"
-               data-slider-step="1" data-slider-value="5" />
-    </div>
-    <div class="row row-fluid" style="margin-top: 30px">
-        <button type="button" class="btn btn-primary" id="pauseButton">Pause</button>
-        <button type="button" class="btn btn-primary" id="resetButton">Reset</button>
-    </div>
-    <p style="margin-top: 15px;">
-        <a data-toggle="modal" data-target="#helpClick">Help</a>
-        <div id="helpClick" class="modal fade" role="dialog">
+    <div class="container center-block container-fluid text-center" id="mainBody">
+        <a data-toggle="modal" data-target="#myModal">About</a>
+        <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4>How to use this tool?</h4>
+                        <h4>About Pomodoro</h4>
                     </div>
                     <div class="modal-body">
-                        <ul style="list-style-type: none">
-                            <li>Use the top slider to set your work time.</li>
-                            <li>Use the bottom slider to set your break time.</li>
-                            <li>Pause/Resume button to pause or resume the process</li>
-                            <li>Reset button to set values to factory default!</li>
-                        </ul>
+                        <p>
+                            The Pomodoro Technique is a time management method. The technique uses a timer
+                            to break down work into intervals, traditionally 25 minutes in length,
+                            separated by short breaks.The method is based on the idea that frequent breaks
+                            can improve mental agility.
+                        </p>
+                        <p>Use this tool to track your work and break time.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </p>
+        <br />
 
-    <br />
-</div>
-<script>
+        <div class="row row-fluid" style="margin-top: 30px;">
+            <h1 id="workTimeMsg">Work Time for: <span id="workTimeDisplay">00:00</span></h1>
+            <input id="ex1" data-slider-id="ex1Slider" type="text"
+                   data-slider-min="1" data-slider-max="60"
+                   data-slider-step="1" data-slider-value="25" />
+        </div>
+        <div class="row row-fluid" style="margin-top: 30px;">
+            <h1 id="breakTimeMsg">Break Time for: <span id="breakTimeDisplay">00:00</span></h1>
+            <input id="ex2" data-slider-id="ex1Slider" type="text"
+                   data-slider-min="1" data-slider-max="30"
+                   data-slider-step="1" data-slider-value="5" />
+        </div>
+        <div class="row row-fluid" style="margin-top: 30px">
+            <button type="button" class="btn btn-primary" id="pauseButton">Pause</button>
+            <button type="button" class="btn btn-primary" id="resetButton">Reset</button>
+        </div>
+        <p style="margin-top: 15px;">
+            <a data-toggle="modal" data-target="#helpClick">Help</a>
+            <div id="helpClick" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4>How to use this tool?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <ul style="list-style-type: none">
+                                <li>Use the top slider to set your work time.</li>
+                                <li>Use the bottom slider to set your break time.</li>
+                                <li>Pause/Resume button to pause or resume the process</li>
+                                <li>Reset button to set values to factory default!</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p>
 
-    function convertToTwoDigits(num) {
-        return num > 9 ? `${num}` : `0${num}`;
-    }
+        <br />
+    </div>
+    <!-- ReSharper disable once JsUnreachableCode -->
+    <script>
 
-    function displayTime(timeValue, element) {
-        var tm, ts;
-        tm = Math.floor(timeValue / 60);
-        ts = timeValue % 60;
-        tm = convertToTwoDigits(tm);
-        ts = convertToTwoDigits(ts);
-        $(element).html(tm + ":" + ts);
-    }
+        function convertToTwoDigits(num) {
+            return num > 9 ? num.toString() : "0" + num.toString();
+        }
 
-    $(document).ready(function() {
-        var workTime = 0;
-        var breakTime = 0;
-        var setWorkTime = 0;
-        var setBreakTime = 0;
-        var isWorkTime = true;
-        var isPaused = false;
-        $('#ex1').slider({
-            formatter: function(value) {
-                setWorkTime = value; //value * 60
-                workTime = value * 60;
+        function displayTime(timeValue, element) {
+            var tm, ts;
+            tm = Math.floor(timeValue / 60);
+            ts = timeValue % 60;
+            tm = convertToTwoDigits(tm);
+            ts = convertToTwoDigits(ts);
+            $(element).html(tm + ":" + ts);
+        }
+
+        $(document).ready(function () {
+            var workTime = 0;
+            var breakTime = 0;
+            var setWorkTime = 0;
+            var setBreakTime = 0;
+            var isWorkTime = true;
+            var isPaused = false;
+            $('#ex1').slider({
+                formatter: function (value) {
+                    setWorkTime = value * 60;
+                    workTime = value * 60;
+                    return 'Current value: ' + value;;
+                }
+            });
+            $('#ex2').slider({
+                formatter: function (value) {
+                    setBreakTime = value * 60;
+                    breakTime = value * 60;
+                    return 'Current value: ' + value;;
+                }
+            });
+
+            $("#pauseButton").click(function () {
+
+                if (isPaused === false) {
+                    isPaused = true;
+                    $("#pauseButton").text("Resume");
+                } else {
+                    isPaused = false;
+                    $("#pauseButton").text("Pause");
+                }
+            });
+            $("#resetButton").click(function () {
+                const myWorkSlider = $("#ex1").slider();
+                myWorkSlider.slider('setValue', 25);
+                const myBreakSlider = $("#ex2").slider();
+                myBreakSlider.slider('setValue', 5);
+                setWorkTime = 25 * 60;
                 workTime = setWorkTime;
-                return `Current value: ${value}`;
-            }
-        });
-        $('#ex2').slider({
-            formatter: function(value) {
-                setBreakTime = value; //value * 60
-                breakTime = value * 60;
+                setBreakTime = 5 * 60;
                 breakTime = setBreakTime;
-                return `Current value: ${value}`;
-            }
-        });
-
-        $("#pauseButton").click(function() {
-
-            if (isPaused === false) {
-                isPaused = true;
-                $("#pauseButton").text("Resume");
-            } else {
+                isWorkTime = true;
                 isPaused = false;
                 $("#pauseButton").text("Pause");
-            }
-        });
-        $("#resetButton").click(function() {
-            const myWorkSlider = $("#ex1").slider();
-            myWorkSlider.slider('setValue', 25);
-            const myBreakSlider = $("#ex2").slider();
-            myBreakSlider.slider('setValue', 5);
-            setWorkTime = 25 * 60;
-            workTime = setWorkTime;
-            setBreakTime = 5 * 60;
-            breakTime = setBreakTime;
-            isWorkTime = true;
-            isPaused = false;
-            $("#pauseButton").text("Pause");
 
-        });
-        window.setInterval(function() {
-            if (isPaused)
-                return;
-            var tm, ts;
-            if (isWorkTime === true) {
-                displayTime(--workTime, "#workTimeDisplay");
-                if (workTime === 0) {
-                    breakTime = setBreakTime;
-                    isWorkTime = false;
-                    //document.getElementById("workTimeMsg").style.visibility = "visible";
-                    //document.getElementById("breakTimeMsg").style.visibility = "hidden";
+            });
+            window.setInterval(function () {
+                if (isPaused)
+                    return;
+                var tm, ts;
+                if (isWorkTime === true) {
+                    displayTime(--workTime, "#workTimeDisplay");
+                    if (workTime === 0) {
+                        breakTime = setBreakTime;
+                        isWorkTime = false;
+                    }
+                } else {
+                    displayTime(--breakTime, "#breakTimeDisplay");
+                    if (breakTime === 0) {
+                        workTime = setWorkTime;
+                        isWorkTime = true;
+                    }
                 }
-            } else {
-                displayTime(--breakTime, "#breakTimeDisplay");
-                if (breakTime === 0) {
-                    workTime = setWorkTime;
-                    isWorkTime = true;
-                    //document.getElementById("workTimeMsg").style.visibility = "hidden";
-                    //document.getElementById("breakTimeMsg").style.visibility = "visible";
-                }
-            }
 
-        }, 1000);
-    });
-</script>
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
